@@ -179,6 +179,8 @@ android_library {
         "LowLightDreamLib",
         "motion_tool_lib",
         "faceunlock_framework",
+        "colorkt",
+        "themelib",
     ],
     manifest: "AndroidManifest.xml",
 

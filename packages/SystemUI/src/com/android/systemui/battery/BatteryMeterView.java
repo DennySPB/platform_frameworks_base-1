@@ -94,7 +94,6 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
     private Drawable mUnknownStateDrawable;
 
     private boolean mBatteryHidden;
-    private int mBatteryStyle = BATTERY_STYLE_PORTRAIT;
 
     private DualToneHandler mDualToneHandler;
 

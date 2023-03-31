@@ -26,6 +26,8 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -365,7 +367,7 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
             CharSequence mChargeIndicator = mCharging && (mBatteryStyle == BATTERY_STYLE_HIDDEN ||
                     mBatteryStyle == BATTERY_STYLE_TEXT || mBatteryStyle == BATTERY_STYLE_FULL_CIRCLE)
                     ? (bolt + " ") : "";
-            String percentText = mChargeIndicator + text;
+            String percentText = mChargeIndicator + NumberFormat.getPercentInstance().format(mLevel / 100f);
             // Setting text actually triggers a layout pass (because the text view is set to
             // wrap_content width and TextView always relayouts for this). Avoid needless
             // relayout if the text didn't actually change.
@@ -417,7 +419,8 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
                                     || mBatteryStyle == BATTERY_STYLE_TEXT
                                     || (mBatteryPercentCharging && mCharging)
                                     || mShowPercentMode == MODE_ON
-                                    || mShowPercentMode == MODE_ESTIMATE;
+                                    || (mShowPercentMode == MODE_ESTIMATE &&
+                                       !TextUtils.isEmpty(mEstimateText));
         showPercent = showPercent && !mBatteryStateUnknown;
 
         mAccessorizedDrawable.showPercent(drawPercentInside);
@@ -426,8 +429,7 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
         mRLandscapeDrawable.setShowPercent(drawPercentInside);
         mLandscapeDrawable.setShowPercent(drawPercentInside);
 
-        if (showPercent || (mBatteryPercentCharging && mCharging)
-                || mShowBatteryEstimate != 0) {
+        if (showPercent || (mBatteryPercentCharging && mCharging)) {
             if (mBatteryPercentView == null) {
                 mBatteryPercentView = loadPercentView();
                 if (mPercentageStyleId != 0) { // Only set if specified as attribute

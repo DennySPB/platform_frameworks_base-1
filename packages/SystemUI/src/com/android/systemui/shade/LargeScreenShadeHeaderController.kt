@@ -270,15 +270,30 @@ class LargeScreenShadeHeaderController @Inject constructor(
         }
     }
 
+    fun updateBatteryStyle(style: Int) {
+        batteryIcon.setBatteryStyle(style)
+    }
+
+    fun updateBatteryPercent(percent: Int) {
+        batteryIcon.setBatteryPercent(percent)
+    }
+
+    fun updateBatteryEstimate(estimate: Int) {
+        batteryIcon.setBatteryEstimate(estimate)
+    }
+
+    fun updateBatteryColors(foregroundColor: Int, backgroundColor:Int, singleToneColor: Int) {
+        batteryIcon.updateColors(foregroundColor, backgroundColor,
+                    singleToneColor)
+    }
+
     override fun onInit() {
         if (header is MotionLayout) {
             variableDateViewControllerFactory.create(date as VariableDateView).init()
         }
         batteryMeterViewController.init()
-
         // battery settings same as in QS icons
         batteryMeterViewController.ignoreTunerUpdates()
-        batteryIcon.setPercentShowMode(BatteryMeterView.MODE_ESTIMATE)
 
         iconManager = tintedIconManagerFactory.create(iconContainer, StatusBarLocation.QS)
         iconManager.setTint(
@@ -495,8 +510,7 @@ class LargeScreenShadeHeaderController @Inject constructor(
         val textColor = Utils.getColorAttrDefaultColor(context, android.R.attr.textColorPrimary)
         val colorStateList = Utils.getColorAttr(context, android.R.attr.textColorPrimary)
         if (textColor != textColorPrimary) {
-            val textColorSecondary = Utils.getColorAttrDefaultColor(context,
-                    android.R.attr.textColorSecondary)
+            val textColorSecondary = Utils.getColorAttrDefaultColor(context, android.R.attr.textColorSecondary)
             textColorPrimary = textColor
             if (iconManager != null) {
                 iconManager.setTint(textColor)
@@ -504,7 +518,6 @@ class LargeScreenShadeHeaderController @Inject constructor(
             clock.setTextColor(textColorPrimary)
             date.setTextColor(textColorPrimary)
             qsCarrierGroup.updateColors(textColorPrimary, colorStateList)
-            batteryIcon.updateColors(textColorPrimary, textColorSecondary, textColorPrimary)
         }
     }
 

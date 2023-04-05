@@ -26,6 +26,7 @@ import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.flags.Flags;
 import com.android.systemui.qs.carrier.QSCarrierGroupController;
 import com.android.systemui.qs.dagger.QSScope;
+import com.android.systemui.shade.LargeScreenShadeHeaderController;
 import com.android.systemui.statusbar.phone.StatusBarContentInsetsProvider;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.phone.StatusBarLocation;
@@ -61,7 +62,7 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
     private final VariableDateViewController mVariableDateViewControllerDateView;
     private final VariableDateViewController mVariableDateViewControllerClockDateView;
     private final HeaderPrivacyIconsController mPrivacyIconsController;
-
+    private final LargeScreenShadeHeaderController mLargeScreenShadeHeaderController;
     private boolean mListening;
 
     @Inject
@@ -76,7 +77,8 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
             VariableDateViewController.Factory variableDateViewControllerFactory,
             BatteryMeterViewController batteryMeterViewController,
             StatusBarContentInsetsProvider statusBarContentInsetsProvider,
-            StatusBarIconController.TintedIconManager.Factory tintedIconManagerFactory) {
+            StatusBarIconController.TintedIconManager.Factory tintedIconManagerFactory,
+            LargeScreenShadeHeaderController largeScreenShadeHeaderController) {
         super(view);
         mPrivacyIconsController = headerPrivacyIconsController;
         mStatusBarIconController = statusBarIconController;
@@ -86,7 +88,7 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
         mFeatureFlags = featureFlags;
         mBatteryMeterViewController = batteryMeterViewController;
         mInsetsProvider = statusBarContentInsetsProvider;
-
+        mLargeScreenShadeHeaderController = largeScreenShadeHeaderController;
         mQSCarrierGroupController = qsCarrierGroupControllerBuilder
                 .setQSCarrierGroup(mView.findViewById(R.id.carrier_group))
                 .build();
@@ -129,7 +131,8 @@ class QuickStatusBarHeaderController extends ViewController<QuickStatusBarHeader
         );
 
         mView.onAttach(mIconManager, mQSExpansionPathInterpolator, rssiIgnoredSlots,
-                mInsetsProvider, mFeatureFlags.isEnabled(Flags.COMBINED_QS_HEADERS));
+                mInsetsProvider, mFeatureFlags.isEnabled(Flags.COMBINED_QS_HEADERS),
+                mLargeScreenShadeHeaderController);
 
         mDemoModeController.addCallback(mDemoModeReceiver);
 
